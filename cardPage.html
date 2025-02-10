@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Product Card</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="cardPage.css">
+
+</head>
+
+<body>
+
+    <div class="product-card d-flex" id="product-card">
+
+
+        <script>
+            (async function getCardDetails() {
+
+                const urlParams = new URLSearchParams(window.location.search);
+
+                const ID = urlParams.get('id');
+
+
+                try {
+                    const data = await fetch(`https://fakestoreapi.com/products/${ID}`)
+
+                    const jsonData = await data.json();
+                  
+
+                    showCardDetails(jsonData);
+
+                } catch (error) {
+                    console.error(error, 'card data getting error')
+                }
+            })()
+
+            function showCardDetails(singleCard) {
+
+                // create image div
+                let imgDiv = document.createElement('div');
+                imgDiv.classList.add('product-image', 'col-md-5');
+
+                let img = document.createElement('img');
+                img.src = singleCard.image;
+                img.alt = 'Product Image';
+
+
+                imgDiv.appendChild(img);
+                
+
+                // Create the product details div
+                let detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('product-details', 'col-md-7');
+
+                // Create the product title
+                let titleDiv = document.createElement('div');
+                titleDiv.classList.add('product-title');
+                titleDiv.textContent = singleCard.title;
+
+                // Create the product price
+                let priceDiv = document.createElement('div');
+                priceDiv.classList.add('product-price');
+                priceDiv.textContent = `$${singleCard.price.toFixed(2)}`;
+
+                // Create the product rating
+                let ratingDiv = document.createElement('div');
+                ratingDiv.classList.add('rating');
+                ratingDiv.textContent = `⭐ ${singleCard.rating.rate} (${singleCard.rating.count} ratings)`;
+
+                // Create the product description
+                let descriptionDiv = document.createElement('div');
+                descriptionDiv.classList.add('product-description');
+                descriptionDiv.textContent = singleCard.description;
+
+                // Create the add to cart button
+                let addToCartButton = document.createElement('button');
+                addToCartButton.classList.add('btn', 'btn-primary', 'mt-3', 'add-to-cart-btn');
+                addToCartButton.textContent = 'Add to Cart';
+                 
+                // Create the add to cart button
+                let buttonAnchor =  document.createElement('a');
+                buttonAnchor.href = 'cartPage.html'
+
+
+                let buyButton = document.createElement('button');
+                buyButton.classList.add( 'mt-4', 'buy-btn');
+                buyButton.textContent = 'Buy';
+
+                buttonAnchor.appendChild(buyButton);
+
+                imgDiv.appendChild(buttonAnchor);
+
+                
+                 (async function checkPresentInCart() {
+                      
+                     let isCartPresent = JSON.parse(localStorage.getItem('cart')).find(element => {
+                         return element.id==singleCard.id;
+                     });
+                     
+
+                     if(isCartPresent){
+                        addToCartButton.textContent = 'Added to Cart';
+                     }
+                 })()
+                
+
+
+                addToCartButton.addEventListener('click', function () {
+                    // Get existing cart from localStorage
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                    // Add the current product to the cart
+                    cart.push(singleCard);
+                    addToCartButton.textContent = 'Added to Cart';
+                    // Save the updated cart to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    // window.location.reload();
+                });
+
+
+                detailsDiv.appendChild(titleDiv);
+                detailsDiv.appendChild(priceDiv);
+                detailsDiv.appendChild(ratingDiv);
+                detailsDiv.appendChild(descriptionDiv);
+                detailsDiv.appendChild(addToCartButton);
+                // detailsDiv.appendChild(buyButton);
+
+
+                document.getElementById('product-card').appendChild(imgDiv);
+                document.getElementById('product-card').appendChild(detailsDiv);
+
+            }
+        </script>
+    </div>
+
+
+
+</body>
+
+</html>

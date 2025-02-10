@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="cartPage.css">
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <div id="cart-items"></div>
+        <div class="total-price" id="total-price"></div>
+    </div>
+
+    <script>
+        (function loadCart() {
+            const cartContainer = document.getElementById('cart-items');
+            const totalPriceDiv = document.getElementById('total-price');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Show a message if the cart is empty
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<h3 class="text-center mt-5"> Cart is empty</h3>';
+                totalPriceDiv.style.display = 'none';
+                return;
+            }
+
+            let totalPrice = 0;
+
+            cart.forEach((item, index) => {
+                let cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+
+                let imgDiv = document.createElement('div');
+                imgDiv.classList.add('cart-item-img');
+                let img = document.createElement('img');
+                img.src = item.image;
+                img.alt = 'Product Image';
+                imgDiv.appendChild(img);
+
+                let detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('cart-item-details');
+
+                let titleDiv = document.createElement('div');
+                titleDiv.classList.add('cart-item-title');
+                titleDiv.textContent = item.title;
+
+                let priceDiv = document.createElement('div');
+                priceDiv.classList.add('cart-item-price');
+                priceDiv.textContent = `$${item.price.toFixed(2)}`;
+                totalPrice += item.price;
+
+                let removeButton = document.createElement('button');
+                removeButton.classList.add('remove-btn');
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', function () {
+
+                    cart.splice(index, 1);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    window.location.reload();
+
+
+                });
+
+
+
+                detailsDiv.appendChild(titleDiv);
+                detailsDiv.appendChild(priceDiv);
+                detailsDiv.appendChild(removeButton);
+
+                cartItemDiv.appendChild(imgDiv);
+                cartItemDiv.appendChild(detailsDiv);
+
+                cartContainer.appendChild(cartItemDiv);
+
+
+            });
+
+
+            totalPriceDiv.style.display = 'block';
+            totalPriceDiv.innerHTML = `Total Price: <span>$${totalPrice.toFixed(2)}</span>`;
+        })();
+    </script>
+
+</body>
+
+</html>

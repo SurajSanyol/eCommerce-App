@@ -1,0 +1,34 @@
+@media( max-width:768px) {
+    
+    .navList{
+        display: none;
+
+    }
+
+}
+
+@media( max-width:576px) {
+    
+    .cardItem{
+        text-align: center;
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .card-img{
+        width: 150px;
+        
+    }
+}
+
+@media( min-width:992px) {
+    
+    .product-title,.rating,.price{
+        padding-left: 40px;
+    }
+
+    /* .card-img{
+        width: 150px;
+        
+    } */
+}
