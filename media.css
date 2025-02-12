@@ -19,6 +19,9 @@
         width: 150px;
         
     }
+    .button-section{
+         margin-right: 21px;
+    }
 }
 
 @media( min-width:992px) {

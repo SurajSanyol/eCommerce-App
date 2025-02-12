@@ -27,9 +27,11 @@
                     const data = await fetch(`https://fakestoreapi.com/products/${ID}`)
 
                     const jsonData = await data.json();
-                  
+
 
                     showCardDetails(jsonData);
+
+                    getCardRelated(jsonData.category)
 
                 } catch (error) {
                     console.error(error, 'card data getting error')
@@ -48,7 +50,7 @@
 
 
                 imgDiv.appendChild(img);
-                
+
 
                 // Create the product details div
                 let detailsDiv = document.createElement('div');
@@ -76,35 +78,35 @@
 
                 // Create the add to cart button
                 let addToCartButton = document.createElement('button');
-                addToCartButton.classList.add('btn', 'btn-primary', 'mt-3', 'add-to-cart-btn');
+                addToCartButton.classList.add('mt-3', 'add-to-cart-btn');
                 addToCartButton.textContent = 'Add to Cart';
-                 
-                // Create the add to cart button
-                let buttonAnchor =  document.createElement('a');
+
+
+                let buttonAnchor = document.createElement('a');
                 buttonAnchor.href = 'cartPage.html'
 
 
                 let buyButton = document.createElement('button');
-                buyButton.classList.add( 'mt-4', 'buy-btn');
+                buyButton.classList.add('mt-4', 'buy-btn');
                 buyButton.textContent = 'Buy';
 
                 buttonAnchor.appendChild(buyButton);
 
-                imgDiv.appendChild(buttonAnchor);
+                // imgDiv.appendChild(buttonAnchor);
 
-                
-                 (async function checkPresentInCart() {
-                      
-                     let isCartPresent = JSON.parse(localStorage.getItem('cart')).find(element => {
-                         return element.id==singleCard.id;
-                     });
-                     
 
-                     if(isCartPresent){
+                (async function checkPresentInCart() {
+
+                    let isCartPresent = JSON.parse(localStorage.getItem('cart')).find(element => {
+                        return element.id == singleCard.id;
+                    });
+
+
+                    if (isCartPresent) {
                         addToCartButton.textContent = 'Added to Cart';
-                     }
-                 })()
-                
+                    }
+                })()
+
 
 
                 addToCartButton.addEventListener('click', function () {
@@ -125,7 +127,7 @@
                 detailsDiv.appendChild(ratingDiv);
                 detailsDiv.appendChild(descriptionDiv);
                 detailsDiv.appendChild(addToCartButton);
-                // detailsDiv.appendChild(buyButton);
+                detailsDiv.appendChild(buttonAnchor);
 
 
                 document.getElementById('product-card').appendChild(imgDiv);
@@ -136,6 +138,81 @@
     </div>
 
 
+    <div id="related-product-section">
+
+        <div class="related-products-title">
+            <h3>Related <span>products</span></h3>
+        </div>
+
+        <div class="container">
+            <div class="row related-card">
+
+    
+                <script>
+
+                    function getCardRelated(categoryName) {
+
+                        let productCard = JSON.parse(localStorage.getItem('productsList'))
+
+                        let categoryCardList = productCard.filter((it) => {
+                            return it.category == categoryName;
+                        })
+                        const relatedCard = document.querySelector('.related-card');
+                        relatedCard.innerHTML = '';  // Clear previous data
+
+                        categoryCardList.forEach((element) => {
+                            let anchor = document.createElement("a");
+                            let div = document.createElement("div");
+                            let img = document.createElement("img");
+                            let title = document.createElement("p");
+                            let ratingPara = document.createElement("p");
+                            let pricePara = document.createElement("p");
+
+                            anchor.classList.add('cardlink')
+                            // anchor.target='_blank';
+                            anchor.href = `cardPage.html?id=${element.id}`
+                            anchor.classList.add('col-sm-6', 'col-md-4');
+
+                            div.classList.add('cardItem');
+
+                            img.classList.add("card-img");
+                            img.src = element.image;
+
+                            title.classList.add("related-product-title");
+                            title.innerText = (element.title).substring(0, 20) + '...';
+
+                            ratingPara.classList.add("related-card-rating");
+                            ratingPara.innerText = element.rating.rate + '☆ ' + '(' + element.rating.count + ' ratings' + ')';
+
+                            pricePara.classList.add("price");
+                            pricePara.innerText = '$' + element.price;
+                            
+                            // create button for add to Cart 
+                            let addToCartButton = document.createElement('button');
+                            addToCartButton.classList.add( 'add-to-cart-btn','cardHover-btn');
+                            addToCartButton.textContent = 'Add to Cart';
+
+                            // appending
+                            div.appendChild(img)
+                            div.appendChild(title)
+                            div.appendChild(ratingPara)
+                            div.appendChild(pricePara)
+                            div.appendChild(addToCartButton)
+
+                            anchor.appendChild(div);
+
+                            document.querySelector('.related-card').appendChild(anchor)
+                        });
+                    }
+
+
+                </script>
+            </div>
+        </div>
+
+
+
+    </div>
 
 </body>
 
